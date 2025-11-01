@@ -1,0 +1,7 @@
+to run open whatever folder in vs code and open the terminal and type 
+
+
+g++ [filename] [filename2] [filenameN...]
+./a
+
+filenames will be all .cpp and .h files including the extension

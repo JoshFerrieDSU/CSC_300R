@@ -1,0 +1,1 @@
+This program demonstrates the use of binary search trees using only arrays. There is a inst.txt file that has rows of numbers. the first number on a line is the command, and the second one is an optional value if the function requires it. The other functions you asked us to create, like bfs is automatically executed in main.
