@@ -1,0 +1,1 @@
+The code here all works and should run as intended. I didn't modify the main at all or the libraies. You might get a lot of output from the functions, but was for debugging because it kept crashing.
