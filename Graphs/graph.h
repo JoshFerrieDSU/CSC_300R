@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 #include <iomanip>
-//#include sqll.h  // for traversals
+#include "sqll.h"  // for traversals
 
 using namespace std;
 
@@ -47,6 +47,9 @@ class Graph
         void bfsM(char start);
         void dfsL(char start);
         void dfsM(char start);
+
+        // task 4
+        int connectedComponents();
 
         // display
         void displayList();

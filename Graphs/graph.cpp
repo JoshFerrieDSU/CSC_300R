@@ -103,6 +103,327 @@ void Graph::addEdge(char src, char dest, int weight)
     adjMatrix[destIndex][srcIndex] = weight;
 }
 
+
+
+void Graph::removeEdge(char src, char dest){
+    vertex* srcV = vertices;
+    vertex* destV = vertices; //grab source and dest for the edge
+
+    while (srcV && srcV->data != src){
+        srcV = srcV->vNext;
+    }
+
+    while (destV && destV->data != dest){
+        destV = destV->vNext;
+    }
+    if (!srcV || !destV){//stop if one end is missing
+        cout << "no edge found"<<endl;
+        return;
+    }
+
+    //start walking
+    edge* curr = srcV->aHead;
+    edge* prev = nullptr;
+    while (curr && curr->dest->data != dest){
+        prev = curr;
+        curr = curr->eNext;
+    }
+    if (curr){
+        if (prev){//check if head or not and delete accordingly for the source
+            prev->eNext = curr->eNext;
+        } else{
+            srcV->aHead = curr->eNext;
+        }
+        delete curr;
+    }
+
+    //now same thing for the dest
+    curr = destV->aHead;
+    prev = nullptr;
+    while (curr && curr->dest->data != src){
+        prev = curr;
+        curr = curr->eNext;
+    }
+    if (curr){
+        if (prev){
+            prev->eNext = curr->eNext;
+        } else{
+            destV->aHead = curr->eNext;
+        }
+        delete curr;
+    }
+
+    //update the aj list
+    int srcIndex = src - 'A';
+    int destIndex = dest - 'A';
+    if ((srcIndex >= 0 && srcIndex < maxVertices) && (destIndex >= 0 && destIndex < maxVertices)){
+        adjMatrix[srcIndex][destIndex] = 0;
+        adjMatrix[destIndex][srcIndex] = 0;
+        cout<<"Updated ["<<srcIndex<<"]["<<destIndex<<"]\n";
+    }
+
+
+}//done and checked
+
+vertex* findVertex(vertex* head, char data)
+{
+    vertex* v = head;
+    while (v && v->data != data)
+    {
+        v = v->vNext;
+    }
+    return v;
+}
+
+void Graph::bfsL(char start){
+    for (int i = 0; i < maxVertices; i++)
+        visited[i] = false;
+
+    vertex* startV = findVertex(vertices, start);
+    if (!startV){//check if it even exists
+        cout<<"ERROR, cant start because vertices cannot be found.\n";
+        return;
+    }
+
+    int startIndex = start - 'A';
+    if (startIndex < 0 || startIndex >= maxVertices){ //check if in range
+        cout<<"out of range.\n";
+        return;
+    }
+
+    Queue q;
+    string labelStr; //character equivalent for queue
+    //since i used string for the old queue, we have to make it work though it complicates things
+    visited[startIndex] = true;
+    labelStr = string(1, start); //char equivalent for my implmentation not worth it
+    q.enqueue(labelStr);
+
+    cout<<"bfs list starting from "<<start<<": ";
+
+    while (!q.isEmpty()){
+        string currentStr = q.dequeue();
+        char currentLabel = currentStr[0];
+        int currentIndex = currentLabel - 'A';
+
+        cout<<currentLabel<<" ";
+
+        vertex* currentVertex = findVertex(vertices, currentLabel);
+        if (!currentVertex){
+            continue; //doesn't break the loop but if somehow an error it skips it but probably could break
+        }
+
+        for (edge* e = currentVertex->aHead; e != nullptr; e = e->eNext){
+            char nLabel = e->dest->data;
+            int nIndex = nLabel - 'A';
+
+            if ((nIndex >= 0 && nIndex < maxVertices) && (!visited[nIndex])){
+                visited[nIndex] = true;
+                labelStr = string(1, nLabel);
+                q.enqueue(labelStr);
+            }
+        }
+    }
+    cout << endl;
+
+}
+
+
+void Graph::bfsM(char start){
+    for (int i = 0; i < maxVertices; i++){
+        visited[i] = false; //none are visited yet
+    }
+
+    int startIndex = start - 'A';
+    if (startIndex < 0 || startIndex >= maxVertices){
+        cout << "Out of range" << endl;
+        return;//range check
+    }
+
+    if (!findVertex(vertices, start)){
+        cout << "Index not found" << endl;
+        return;//vertex check
+    }
+
+    Queue q;
+    string iStr;
+
+    visited[startIndex] = true;
+    iStr = to_string(startIndex);
+    q.enqueue(iStr);
+
+    cout<<"bfs aj matrix starting from "<<start<<": ";
+
+    while(!q.isEmpty()){
+        string vStr = q.dequeue();
+        int v = stoi(vStr);//note v is current in the queue or honestly any stoi
+
+        cout<<char('A' + v) << " ";
+
+        for (int i = 0; i < maxVertices; i++){
+            if (adjMatrix[v][i] != 0 && !visited[i]){
+                visited[i] = true;
+                iStr = to_string(i);
+                q.enqueue(iStr);
+            }
+        }
+    }
+    cout<<endl;
+}
+
+void Graph::dfsL(char start){
+    for (int i = 0; i < maxVertices; ++i)
+        visited[i] = false;
+
+    if (!findVertex(vertices, start))
+    {
+        cout << "Vertex not found endl";
+        return;
+    }
+
+    int startIndex = start - 'A';
+    if (startIndex < 0 || startIndex >= maxVertices)
+    {
+        cout << "Out of range";
+        return;
+    }
+
+    Stack st;
+    string labelStr;
+
+    labelStr = string(1, start);
+    st.push(labelStr);
+
+    cout<<"DFS list from "<<start<<": ";
+
+    while (!st.isEmpty()){
+        string vStr = st.pop();
+        char vLabel = vStr[0];
+        int vIndex = vLabel - 'A';
+
+        if (vIndex < 0 || vIndex >= maxVertices){
+            continue;
+        }
+        if (!visited[vIndex]){
+            visited[vIndex] = true;
+            cout<<vLabel<<" ";
+
+            vertex* v = findVertex(vertices, vLabel);
+            if(!v){
+                continue;
+            }
+
+            for (edge* e = v->aHead; e != nullptr; e = e->eNext){
+                char nLabel = e->dest->data;
+                int nIndex = nLabel - 'A';
+
+                if (nIndex >= 0 && nIndex < maxVertices && !visited[nIndex]){
+                    labelStr = string(1, nLabel);
+                    st.push(labelStr);
+                }
+            }
+        }
+    }
+    cout<<endl;
+}
+
+void Graph::dfsM(char start){
+    for (int i = 0; i < maxVertices; ++i)
+        visited[i] = false;
+
+    if (!findVertex(vertices, start))
+    {
+        cout << "Vertex not found endl";
+        return;
+    }
+
+    int startIndex = start - 'A';
+    if (startIndex < 0 || startIndex >= maxVertices)
+    {
+        cout << "Out of range";
+        return;
+    }
+
+    Stack st;
+    string iStr;
+
+    iStr = to_string(startIndex);
+    st.push(iStr);
+
+    cout<<"DFS aj matrix from "<<start<<": ";
+
+    while(!st.isEmpty()){
+        string vStr = st.pop();
+        int v = stoi(vStr);
+
+        if (!visited[v]){
+            visited[v] = true;
+            cout<<char('A' + v) << " ";
+
+            for (int i = maxVertices - 1; i >= 0; i--){
+                if (adjMatrix[v][i] != 0 && !visited[i]){
+                    iStr = to_string(i);
+                    st.push(iStr);
+                }
+            }
+        }
+    }
+    cout<<endl;
+}
+
+int Graph::connectedComponents(){
+    for (int i = 0; i < maxVertices; ++i)
+        visited[i] = false;
+
+    int count = 0;
+
+    for (vertex* v = vertices; v != nullptr; v = v->vNext){
+        int index = v->data - 'A';
+        if (index < 0 || index >= maxVertices){
+            continue;
+        }
+        if (!visited[index]){
+            count++;
+            cout<<"Part " <<count<<": ";
+
+            Queue q;
+            string labelStr;
+
+            visited[index] = true;
+            labelStr = string(1, v->data);
+            q.enqueue(labelStr);
+
+            while (!q.isEmpty())
+            {
+                string currentStr = q.dequeue();
+                char currentLabel = currentStr[0];
+                int cIndex = currentLabel - 'A';
+
+                cout << currentLabel << " ";
+
+                vertex* currVertex = findVertex(vertices, currentLabel);
+                if (!currVertex){
+                    continue;
+                }
+
+                for (edge* e = currVertex->aHead; e != nullptr; e = e->eNext){
+                    char nLabel = e->dest->data;
+                    int nIndex = nLabel - 'A';
+
+                    if (nIndex >= 0 && nIndex < maxVertices && !visited[nIndex]){
+                        visited[nIndex] = true;
+                        labelStr = string(1, nLabel);
+                        q.enqueue(labelStr);
+                    }
+                }
+            }
+            cout<<endl;
+            
+        }
+    }
+    cout<<"Total connections: "<<count<<endl;
+    return count;
+}
+
 void Graph::removeVertex(char data)
 {
     // find the vertex

@@ -33,9 +33,9 @@ int main()
     g.addEdge('C', 'H', 14);
 
     // Removing a vertex and some edges
-    //g.removeVertex('F');
-    // g.removeEdge('C', 'H');
-    // g.removeEdge('D', 'E');
+    g.removeVertex('F');
+    g.removeEdge('C', 'H');
+    g.removeEdge('D', 'E');
 
     // Display adjacency list and matrix
     g.displayList();
@@ -44,10 +44,12 @@ int main()
     cout << endl;
 
     // Perform BFS and DFS starting from vertex 'A'
-    // g.bfsL('A');
-    // g.bfsM('A');
-    // g.dfsL('A');
-    // g.dfsM('A');  
+    g.bfsL('A');
+     g.bfsM('A');
+     g.dfsL('A');
+     g.dfsM('A');
+     
+     int connected = g.connectedComponents();
 
 
     cout << endl;
