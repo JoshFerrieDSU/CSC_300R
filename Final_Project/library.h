@@ -1,13 +1,19 @@
-//make heap, bst, linked list, and array
-//Only need to make a heap, probably a max heap
+//make queue, bst, linked list, and stack
 //Goal is to fill everything up with the same random set of values, then see which ones can find a min, max, and a middle value.
 #ifndef FINAL_H
 #define FINAL_H
 
+#include <fstream>
+#include <string>
+#include <sstream>
+#include <cstdlib>
+#include <ctime>
+
+
 #include <iostream>
 using namespace std;
 
-struct lnode
+struct lnode //linked list
 {
     int data;
     struct lnode *next;
@@ -21,13 +27,9 @@ void displayList(lnode *head);
 lnode* searchNode(lnode *head, int key);
 lnode* reverseList(lnode *head);
 
-//for pointer bsts
-#include <fstream>
-#include <string>
-#include <sstream>
-#include <cstdlib>
+//end ll
 
-using namespace std;
+//for pointer bsts
 
 struct bstnode
 {
@@ -64,6 +66,50 @@ class Queue
         bstnode* dequeue();
         bool isEmpty();
         void display();
+};
+
+class Timer
+{
+    public:
+        bool running = false;
+        bool hasRan = false;
+        clock_t start;
+        clock_t end;
+        int difference;
+        
+        Queue q;
+        
+
+        double getDifference(){
+            return double(end-start);
+        }
+        void startTimer(){
+            start = clock();
+            running = true;
+            if (hasRan == false){
+                hasRan = true;
+            }
+        }
+        void endTimer(){
+            if (!running)
+                return;
+            end = clock();
+            difference = getDifference()*1000 / 1000000*CLOCKS_PER_SEC;
+            running = false;
+        }
+        void printTimer(){
+            if (hasRan == true){
+                if (start < end){
+                    cout<<"Time length: "<<difference<<" ms\n";
+                } else{
+                    cout<<"Time length: Currently Running\n";
+                }
+            }
+        }
+        void endAndPrint(){
+            endTimer();
+            printTimer();
+        }
 };
 
 class BST
