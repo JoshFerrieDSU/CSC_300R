@@ -175,6 +175,7 @@ int main (int argc, char *argv[])
         } else{
             if (i % (amountofrandomvalues/10) == 0 )
                 cout<<"------"<<i<<"------\n";
+                break;
         }
     }
 
