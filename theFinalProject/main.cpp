@@ -164,7 +164,7 @@ int main (int argc, char *argv[])
 
     //find value at workingset[6] since stack doesn't keep track of indexes well
 
-    goalValue = workingset[6];
+    goalValue = workingset[0];
 
     cout<<"Stack:\nTrying to locate ["<<goalValue<<"] at "<< 6<<endl;
 
@@ -172,10 +172,11 @@ int main (int argc, char *argv[])
         int value = s.pop();
         if (value == goalValue){
             cout<<"Found matching value in stack layer "<<i<<endl;
+            break;
         } else{
-            if (i % (amountofrandomvalues/14) == 0 )
+            if (i % (amountofrandomvalues/14) == 0 ){
                 cout<<"------"<<i<<"------\n";
-                break;
+            }
         }
     }
 
