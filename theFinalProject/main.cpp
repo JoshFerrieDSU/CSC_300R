@@ -20,7 +20,7 @@
 
 int main (int argc, char *argv[])
 {
-    bool usingrandomset = true; //false = using values specified above, true = generate x random values from terminal input when ran ex /.a 20.
+    bool usingrandomset = argc >= 2; //false = using values specified above, true = generate x random values from terminal input when ran ex /.a 20.
     int amountofrandomvalues = usingrandomset ? stoi(argv[1]) : 13;// this is x
     int workingset[amountofrandomvalues];
     
@@ -65,7 +65,7 @@ int main (int argc, char *argv[])
     int index = 0;
     int maxindex = 0;
     while (walker != nullptr){
-        cout<<"["<<index<<"]"<<": "<<walker->data<<endl;
+        // cout<<"["<<index<<"]"<<": "<<walker->data<<endl;
         int value = walker->data;
         if (value > max){
             max = value;
@@ -97,7 +97,7 @@ int main (int argc, char *argv[])
     //find [6] little less than linear time if found before last index
     index = 0;
     srand(time(NULL));
-    int goalIndex = amountofrandomvalues >= 3 ? rand()%(amountofrandomvalues-2) + 1 : rand()%goalIndex;;//generates values from [1] to [maxindex-1] otherwise nothing
+    int goalIndex = amountofrandomvalues >= 3 ? rand()%(amountofrandomvalues-2) + 1 : rand()%amountofrandomvalues;;//generates values from [1] to [maxindex-1] otherwise nothing
     int randomGenerated = goalIndex;
     int goalValue = INT_MIN;
     walker = head;
@@ -108,7 +108,6 @@ int main (int argc, char *argv[])
         }
         index++;
         walker = walker->next;
-        cout<<index<<endl;
     }
     if (goalValue != INT_MIN){
         cout<<"["<<goalIndex<<"] = "<<goalValue<<endl;
@@ -168,17 +167,17 @@ int main (int argc, char *argv[])
 
     goalValue = workingset[randomGenerated];
 
-    cout<<"Stack:\nTrying to locate ["<<goalValue<<"] at "<< 6<<endl;
+    cout<<"Trying to locate "<<goalValue<<" at index "<< 6<<endl;
 
     for (int i = 0; s.isEmpty() == false; i++){
         int value = s.pop();
         int nozero = amountofrandomvalues > 14 ? amountofrandomvalues/14 : 1; //if input larger than 14 then input/14 otherwise 1
         if (i % nozero == 0 ){
-            cout<<"------"<<i<<"------\n";
+            //cout<<"------"<<i<<"------\n";
         }   
         if (value == goalValue){
-            cout<<"Found matching value in stack layer "<<i<<endl;
-            break;
+            cout<<"Found ["<<value<<"] value in stack layer "<<i<<endl;
+             break;
         } else{
         }
     }
@@ -189,15 +188,51 @@ int main (int argc, char *argv[])
     //queue area
     timer.startTimer();
     Queue q;
-    
+    Queue qBackup;
 
     //insert
+    for (int i = 0; i<amountofrandomvalues; i++){
+        q.enqueue(workingset[i]);
+    }
 
     //find max
-
+    max = INT_MIN;
+    while (q.isEmpty() == false){
+        int value = q.dequeue();
+        qBackup.enqueue(value);
+        if (value > max){
+            max = value;
+        }
+    }
+    while (qBackup.isEmpty() == false){
+        int value = qBackup.dequeue();
+        q.enqueue(value);
+    }
+    cout<<"Queue max: "<<max<<endl;
     //find min
+    min = INT_MAX;
+    while (q.isEmpty() == false){
+        int value = q.dequeue();
+        qBackup.enqueue(value);
+        if (value < min){
+            min = value;
+        }
+    }
+    while (qBackup.isEmpty() == false){
+        int value = qBackup.dequeue();
+        q.enqueue(value);
+    }
+    cout<<"Queue min: "<<min<<endl;
 
     //find [6]
+    goalValue = workingset[goalIndex];
+    while (q.isEmpty() == false){
+        int value = q.dequeue();
+        if (value == goalValue){
+            cout<<"Queue found random value: "<<value<<endl;
+            break;
+        }
+    }
 
     //end timer
     timer.endAndPrint();
@@ -206,14 +241,43 @@ int main (int argc, char *argv[])
 
     timer.startTimer();
     //bst area -start timer
+    BST bst;
 
     //insert
+    for (int i = 0; i<amountofrandomvalues; i++){
+        bst.insertNode(bst.root, workingset[i]);
+    }
 
     //find max
+    max = INT_MIN;
+    for (bstnode* bstwalker = bst.root; bstwalker != nullptr; bstwalker = bstwalker->rightChild){
+        max = bstwalker->data;
+    }
+    cout<<"BST max: "<<max<<endl;
 
     //find min
 
+    max = INT_MAX;
+    for (bstnode* bstwalker = bst.root; bstwalker != nullptr; bstwalker = bstwalker->leftChild){
+        max = bstwalker->data;
+    }
+    cout<<"BST min: "<<min<<endl;
+
     //find [6]
+
+    bstnode* bstwalker = bst.root;
+    goalValue = workingset[goalIndex];
+    while(bstwalker != nullptr){
+        int value = bstwalker->data;
+        if (value == goalValue){
+            cout<<"BST found "<<value<<endl;
+            break;
+        } else if (value > goalValue){
+            bstwalker = bstwalker->leftChild;
+        } else{ //if current is smaller
+            bstwalker = bstwalker->rightChild;
+        }
+    }
 
     //end timer
     timer.endAndPrint();
