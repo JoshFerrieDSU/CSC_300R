@@ -173,7 +173,7 @@ int main (int argc, char *argv[])
         if (value == goalValue){
             cout<<"Found matching value in stack layer "<<i<<endl;
         } else{
-            if (i % (amountofrandomvalues/10) == 0 )
+            if (i % (amountofrandomvalues/14) == 0 )
                 cout<<"------"<<i<<"------\n";
                 break;
         }
