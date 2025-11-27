@@ -48,8 +48,15 @@ class Timer
             printTimer();
         }
         void printHistory(){
+            Queue qBackup;
             for (int i = 0; q.isEmpty() == false; i++){
-                cout<<"["<<i<<"]: "<<q.dequeue()<<" ms\n";
+                int value = q.dequeue();
+                qBackup.enqueue(value);
+            }
+            for (int i = 0; qBackup.isEmpty() == false; i++){
+                int value = qBackup.dequeue();
+                q.enqueue(value);
+                cout<<"["<<i<<"]: "<<value<<" ms\n";
             }
         }
 };

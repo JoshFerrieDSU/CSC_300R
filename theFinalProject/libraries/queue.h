@@ -41,7 +41,7 @@ class Queue
             }
         }
 
-        void enqueue(int& value) 
+        void enqueue(int value) 
         {
             node* newnode = new node(value);
 
