@@ -2,9 +2,9 @@
 
 //max, min, random
 //find ll max, min, random
-//find heap max min random
+//find queue  max min random
 //find bst max min random
-//find array max min random
+//find stack max min random
 
 
 
@@ -22,6 +22,9 @@ int main (int argc, char *argv[])
 {
     bool usingrandomset = argc >= 2; //false = using values specified above, true = generate x random values from terminal input when ran ex /.a 20.
     int amountofrandomvalues = usingrandomset ? stoi(argv[1]) : 13;// this is x
+    if (amountofrandomvalues <= 0){
+        return 0;
+    }
     int workingset[amountofrandomvalues];
     
     if (usingrandomset){
@@ -45,6 +48,7 @@ int main (int argc, char *argv[])
         workingset[12] = 91;
     }
 //----------------------------------------------------------------------------------
+    cout<<"----------------------"<<endl;
 
 
     Timer timer;
@@ -94,7 +98,7 @@ int main (int argc, char *argv[])
     cout<<"Minimum for LL ["<<minindex<<"] is: "<<min<<endl;
     
 
-    //find [6] little less than linear time if found before last index
+    //find [r] little less than linear time if found before last index
     index = 0;
     srand(time(NULL));
     int goalIndex = amountofrandomvalues >= 3 ? rand()%(amountofrandomvalues-2) + 1 : rand()%amountofrandomvalues;;//generates values from [1] to [maxindex-1] otherwise nothing
@@ -121,6 +125,7 @@ int main (int argc, char *argv[])
     timer.endAndPrint();
 
 //----------------------------------------------------------------------------------
+    cout<<"----------------------"<<endl;
 
     timer.startTimer();
     //stack area
@@ -163,11 +168,11 @@ int main (int argc, char *argv[])
     }
     cout<<"Minimum for stack: "<<min<<endl;
 
-    //find value at workingset[6] since stack doesn't keep track of indexes well
+    //find value at workingset[r] since stack doesn't keep track of indexes well
 
-    goalValue = workingset[randomGenerated];
+    goalValue = workingset[goalIndex];
 
-    cout<<"Trying to locate "<<goalValue<<" at index "<< 6<<endl;
+    cout<<"Trying to locate "<<goalValue<<" at index "<< goalIndex<<endl;
 
     for (int i = 0; s.isEmpty() == false; i++){
         int value = s.pop();
@@ -176,7 +181,7 @@ int main (int argc, char *argv[])
             //cout<<"------"<<i<<"------\n";
         }   
         if (value == goalValue){
-            cout<<"Found ["<<value<<"] value in stack layer "<<i<<endl;
+            cout<<"Found "<<value<<" value in stack layer "<<i<<endl;
              break;
         } else{
         }
@@ -184,6 +189,7 @@ int main (int argc, char *argv[])
 
     timer.endAndPrint();
 //----------------------------------------------------------------------------------
+    cout<<"----------------------"<<endl;
 
     //queue area
     timer.startTimer();
@@ -224,7 +230,7 @@ int main (int argc, char *argv[])
     }
     cout<<"Queue min: "<<min<<endl;
 
-    //find [6]
+    //find [r]
     goalValue = workingset[goalIndex];
     while (q.isEmpty() == false){
         int value = q.dequeue();
@@ -238,6 +244,7 @@ int main (int argc, char *argv[])
     timer.endAndPrint();
 
 //----------------------------------------------------------------------------------
+    cout<<"----------------------"<<endl;
 
     timer.startTimer();
     //bst area -start timer
@@ -257,13 +264,13 @@ int main (int argc, char *argv[])
 
     //find min
 
-    max = INT_MAX;
+    min = INT_MAX;
     for (bstnode* bstwalker = bst.root; bstwalker != nullptr; bstwalker = bstwalker->leftChild){
-        max = bstwalker->data;
+        min = bstwalker->data;
     }
     cout<<"BST min: "<<min<<endl;
 
-    //find [6]
+    //find [r]
 
     bstnode* bstwalker = bst.root;
     goalValue = workingset[goalIndex];

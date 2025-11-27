@@ -17,7 +17,7 @@ class Timer
         
 
         double getDifference(){
-            return end-start;
+            return double(end-start)/CLOCKS_PER_SEC;
         }
         void startTimer(){
             start = clock();
@@ -29,7 +29,7 @@ class Timer
         void endTimer(){
             if (running == true){
                 end = clock();
-                difference = getDifference()*1000 / 1000000*CLOCKS_PER_SEC;
+                difference = getDifference()*1000;
                 running = false;
                 q.enqueue(difference);
             }
