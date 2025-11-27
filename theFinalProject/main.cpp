@@ -97,7 +97,8 @@ int main (int argc, char *argv[])
     //find [6] little less than linear time if found before last index
     index = 0;
     srand(time(NULL));
-    int goalIndex = rand()%(amountofrandomvalues-2) + 1;//generates values from [1] to [maxindex-1]
+    int goalIndex = amountofrandomvalues >= 3 ? rand()%(amountofrandomvalues-2) + 1 : rand()%goalIndex;;//generates values from [1] to [maxindex-1] otherwise nothing
+    int randomGenerated = goalIndex;
     int goalValue = INT_MIN;
     walker = head;
     while (walker != nullptr && goalValue == INT_MIN){
@@ -107,6 +108,7 @@ int main (int argc, char *argv[])
         }
         index++;
         walker = walker->next;
+        cout<<index<<endl;
     }
     if (goalValue != INT_MIN){
         cout<<"["<<goalIndex<<"] = "<<goalValue<<endl;
@@ -164,19 +166,20 @@ int main (int argc, char *argv[])
 
     //find value at workingset[6] since stack doesn't keep track of indexes well
 
-    goalValue = workingset[0];
+    goalValue = workingset[randomGenerated];
 
     cout<<"Stack:\nTrying to locate ["<<goalValue<<"] at "<< 6<<endl;
 
     for (int i = 0; s.isEmpty() == false; i++){
         int value = s.pop();
+        int nozero = amountofrandomvalues > 14 ? amountofrandomvalues/14 : 1; //if input larger than 14 then input/14 otherwise 1
+        if (i % nozero == 0 ){
+            cout<<"------"<<i<<"------\n";
+        }   
         if (value == goalValue){
             cout<<"Found matching value in stack layer "<<i<<endl;
             break;
         } else{
-            if (i % (amountofrandomvalues/14) == 0 ){
-                cout<<"------"<<i<<"------\n";
-            }
         }
     }
 
